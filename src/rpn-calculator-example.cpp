@@ -14,10 +14,11 @@
 using namespace std;
 
 /*
- * *** STUDENTS WILL NEED TO CHANGE INPUT_CSV_FILE PATH BELOW TO POINT TO THE rpn-input.csv FILE ***
+ * *** STUDENTS WILL NEED TO CHANGE INPUT_CSV_FILE PATH BELOW TO POINT TO THE
+ * rpn-input.csv FILE ***
  * *** ON THEIR LAPTOP/COMPUTER ***
  */
-#define INPUT_CSV_FILE "/class-cplusplus/rpn-bitwise-calculator/rpn-input.csv"
+#define INPUT_CSV_FILE "rpn-input.csv"
 
 // test controls
 #define MIN_VALUE 0
@@ -38,8 +39,9 @@ enum command : uint16_t {
     cmd_and,
     cmd_add,
 };
-vector<string> command_name = {"cmd_enter",       "cmd_clear", "cmd_pop", "cmd_top", "cmd_left_shift",
-                               "cmd_right_shift", "cmd_or",    "cmd_and", "cmd_add"};
+vector<string> command_name = {"cmd_enter", "cmd_clear",      "cmd_pop",
+                               "cmd_top",   "cmd_left_shift", "cmd_right_shift",
+                               "cmd_or",    "cmd_and",        "cmd_add"};
 uint8_t const width = 16U;
 
 /*
@@ -48,14 +50,16 @@ uint8_t const width = 16U;
  * Students should create or add any functions or classes they may need.
  */
 shared_ptr<uint16_t> rpn_calc(command const cmd, uint16_t const value = 0) {
-    // this is example code which returns a (smart shared) pointer to 16-bit value
+    // this is example code which returns a (smart shared) pointer to 16-bit
+    // value
     uint16_t val = 0b1001100100000011;
     shared_ptr<uint16_t> result = make_shared<uint16_t>(val);
     return result;
 }
 
 /*
- * *** STUDENTS SHOULD NOT NEED TO CHANGE THE CODE BELOW. IT IS A CUSTOM TEST HARNESS. ***
+ * *** STUDENTS SHOULD NOT NEED TO CHANGE THE CODE BELOW. IT IS A CUSTOM TEST
+ * HARNESS. ***
  */
 
 void header() {
@@ -64,7 +68,8 @@ void header() {
     cout << left << setw(table_width[2]) << setfill(' ') << "value";
     cout << left << setw(table_width[3]) << setfill(' ') << "value bits";
     cout << left << setw(table_width[4]) << setfill(' ') << "result";
-    cout << left << setw(table_width[5]) << setfill(' ') << "result bits" << endl;
+    cout << left << setw(table_width[5]) << setfill(' ') << "result bits"
+         << endl;
 
     cout << left << setw(table_width[0]) << setfill(' ') << "--------";
     cout << left << setw(table_width[1]) << setfill(' ') << "--------";
@@ -74,7 +79,8 @@ void header() {
     cout << left << setw(table_width[5]) << setfill(' ') << "--------" << endl;
 }
 
-void print_row(bool const test_success, command const cmd, int16_t const value, shared_ptr<uint16_t> top_of_stack) {
+void print_row(bool const test_success, command const cmd, int16_t const value,
+               shared_ptr<uint16_t> top_of_stack) {
     // print results
     string const pass_fail = test_success ? "PASS" : "FAIL";
     cout << left << setw(table_width[0]) << setfill(' ') << pass_fail;
@@ -84,12 +90,14 @@ void print_row(bool const test_success, command const cmd, int16_t const value, 
         cout << left << setw(table_width[3]) << setfill(' ') << " ";
     } else {
         cout << left << setw(table_width[2]) << setfill(' ') << value;
-        cout << left << setw(table_width[3]) << setfill(' ') << bitset<width>(value);
+        cout << left << setw(table_width[3]) << setfill(' ')
+             << bitset<width>(value);
     }
 
     if (top_of_stack) {
         cout << left << setw(table_width[4]) << setfill(' ') << *top_of_stack;
-        cout << left << setw(table_width[5]) << setfill(' ') << bitset<width>(*top_of_stack) << endl;
+        cout << left << setw(table_width[5]) << setfill(' ')
+             << bitset<width>(*top_of_stack) << endl;
     } else {
         cout << left << setw(table_width[4]) << setfill(' ') << " ";
         cout << left << setw(table_width[5]) << setfill(' ') << " " << endl;
@@ -118,8 +126,10 @@ void init_command_map(unordered_map<string, command> &command_map) {
     }
 }
 
-bool parse_csv_line(string const line, unordered_map<string, command> command_map, command &input_cmd,
-                    uint16_t &input_value, int32_t &answer_value) {
+bool parse_csv_line(string const line,
+                    unordered_map<string, command> command_map,
+                    command &input_cmd, uint16_t &input_value,
+                    int32_t &answer_value) {
     try {
         vector<string> tokens = split(line, ",");
 
@@ -150,8 +160,10 @@ bool test() {
     // open input file
     ifstream input_file(INPUT_CSV_FILE);
     if (!input_file.is_open()) {
-        cout << "ERROR: Unable to find and open the file " << INPUT_CSV_FILE << endl;
-        cout << "       Make sure the path to the file is correct in your code" << endl;
+        cout << "ERROR: Unable to find and open the file " << INPUT_CSV_FILE
+             << endl;
+        cout << "       Make sure the path to the file is correct in your code"
+             << endl;
         return false;
     }
 
@@ -174,7 +186,8 @@ bool test() {
             command input_cmd;
             uint16_t input_value;
             int32_t input_answer;
-            bool parse_success = parse_csv_line(line, command_map, input_cmd, input_value, input_answer);
+            bool parse_success = parse_csv_line(line, command_map, input_cmd,
+                                                input_value, input_answer);
             if (!parse_success) {
                 return false;
             }
