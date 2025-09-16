@@ -18,7 +18,7 @@ using namespace std;
  * rpn-input.csv FILE ***
  * *** ON THEIR LAPTOP/COMPUTER ***
  */
-#define INPUT_CSV_FILE "rpn-input.csv"
+#define INPUT_CSV_FILE "../rpn-input.csv"
 
 // test controls
 #define MIN_VALUE 0
