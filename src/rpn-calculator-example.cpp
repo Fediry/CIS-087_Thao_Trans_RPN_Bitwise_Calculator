@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -45,6 +46,14 @@ uint8_t const width = 16U;
  * Students should create or add any functions or classes they may need.
  */
 shared_ptr<uint16_t> rpn_calc(command const cmd, uint16_t const value = 0) {
+    switch (cmd) {
+        case cmd_enter:
+            /* code */
+            break;
+
+        default:
+    }
+
     // this is example code which returns a (smart shared) pointer to 16-bit
     // value
     uint16_t val = 0b1001100100000011;
