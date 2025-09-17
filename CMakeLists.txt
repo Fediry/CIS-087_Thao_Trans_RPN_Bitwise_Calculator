@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 # Config
-project(NAME ThaoTran_RPN_Calculator VERSION 0.1.0 LANGUAGES C CXX)
+project(Thao_Tran-RPN_Calculator VERSION 0.1.0 LANGUAGES C CXX)
 
 # Sources
 set(SOURCES
