@@ -40,6 +40,14 @@ vector<string> command_name = {"cmd_enter", "cmd_clear",      "cmd_pop",
                                "cmd_or",    "cmd_and",        "cmd_add"};
 uint8_t const width = 16U;
 
+shared_ptr<uint16_t> command_clear(stack<u_int16_t> &v_stack) {
+    while (!v_stack.empty()) {
+        v_stack.pop();
+    }
+
+    return nullptr;
+}
+
 /*
  * *** STUDENTS SHOULD WRITE CODE FOR THIS FUNCTION ***
  * Students should create or add any data structures needed.
@@ -47,13 +55,17 @@ uint8_t const width = 16U;
  */
 shared_ptr<uint16_t> rpn_calc(command const cmd, uint16_t const value = 0) {
     stack<u_int16_t> value_stack;
+    // initialize the stack... might not be needed once other functions are in
+    // place.
     value_stack.push(0U);
 
     switch (cmd) {
         case cmd_enter:
             value_stack.push(value);
             break;
-
+        case cmd_clear:
+            command_clear(value_stack);
+            break;
         default:
             break;
     }
