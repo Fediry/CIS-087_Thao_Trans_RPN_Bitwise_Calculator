@@ -38,7 +38,7 @@ shared_ptr<uint16_t> rpn_calculator::command_top() {
     return result;
 }
 
-shared_ptr<uint16_t> rpn_calculator::command_left_shift() {
+shared_ptr<uint16_t> rpn_calculator::command_bw_operation(char const op) {
     if (value_stack.size() < 2) {
         return nullptr;
     }
@@ -47,21 +47,23 @@ shared_ptr<uint16_t> rpn_calculator::command_left_shift() {
     value_stack.pop();
     b_val = make_shared<uint16_t>(value_stack.top());
     value_stack.pop();
-    value_stack.push(*b_val << *a_val);
-    shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
-    return result;
-}
-
-shared_ptr<uint16_t> rpn_calculator::command_right_shift() {
-    if (value_stack.size() < 2) {
-        return nullptr;
+    switch (op) {
+        case '<':
+            value_stack.push(*b_val << *a_val);
+            break;
+        case '>':
+            value_stack.push(*b_val >> *a_val);
+            break;
+        case '|':
+            value_stack.push(*b_val | *a_val);
+            break;
+        case '&':
+            value_stack.push(*b_val & *a_val);
+            break;
+        default:
+            break;
     }
 
-    a_val = make_shared<uint16_t>(value_stack.top());
-    value_stack.pop();
-    b_val = make_shared<uint16_t>(value_stack.top());
-    value_stack.pop();
-    value_stack.push(*b_val >> *a_val);
     shared_ptr<uint16_t> result = command_top();
     return result;
 }
@@ -90,20 +92,22 @@ shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const 
             return result;
             break;
         case cmd_left_shift:
-            result = command_left_shift();
+            result = command_bw_operation('<');
             return result;
             break;
         case cmd_right_shift:
-            result = command_right_shift();
+            result = command_bw_operation('>');
+            return result;
+            break;
+        case cmd_or:
+            result = command_bw_operation('|');
+            return result;
+            break;
+        case cmd_and:
+            result = command_bw_operation('&');
             return result;
             break;
         default:
-            break;
+            return result;
     }
-
-    // this is example code which returns a (smart shared) pointer to 16-bit
-    // value
-    // uint16_t val = 0b1001100100000011;
-    // shared_ptr<uint16_t> result = make_shared<uint16_t>(val);
-    return result;
 }

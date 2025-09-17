@@ -9,7 +9,6 @@ class rpn_calculator {
     stack<uint16_t> value_stack;
     shared_ptr<uint16_t> a_val;
     shared_ptr<uint16_t> b_val;
-    shared_ptr<uint16_t> op_result;
 
    public:
     rpn_calculator() {}
@@ -19,7 +18,6 @@ class rpn_calculator {
     shared_ptr<uint16_t> command_clear();
     shared_ptr<uint16_t> command_pop();
     shared_ptr<uint16_t> command_top();
-    shared_ptr<uint16_t> command_left_shift();
-    shared_ptr<uint16_t> command_right_shift();
+    shared_ptr<uint16_t> command_bw_operation(char const op);
     shared_ptr<uint16_t> rpn_calc(command const cmd, uint16_t const value);
 };
