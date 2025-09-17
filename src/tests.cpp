@@ -3,7 +3,19 @@
  * HARNESS. ***
  */
 
-void header() {
+using namespace std;
+
+#define INPUT_CSV_FILE "../rpn-input.csv"
+
+// test controls
+#define MIN_VALUE 0
+#define MAX_VALUE 100
+uint8_t const table_width[] = {14, 18, 14, 18, 14, 18};
+
+// test harness structs and params
+#define VALUE_NULLPTR -999
+
+void tests::header() {
     cout << left << setw(table_width[0]) << setfill(' ') << "pass/fail";
     cout << left << setw(table_width[1]) << setfill(' ') << "command";
     cout << left << setw(table_width[2]) << setfill(' ') << "value";

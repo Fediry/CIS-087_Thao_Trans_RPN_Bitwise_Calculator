@@ -5,16 +5,6 @@
 
 using namespace std;
 
-#define INPUT_CSV_FILE "../rpn-input.csv"
-
-// test controls
-#define MIN_VALUE 0
-#define MAX_VALUE 100
-uint8_t const table_width[] = {14, 18, 14, 18, 14, 18};
-
-// test harness structs and params
-#define VALUE_NULLPTR -999
-
 enum command : uint16_t {
     cmd_enter = 0,
     cmd_clear,
