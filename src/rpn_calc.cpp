@@ -38,27 +38,30 @@ shared_ptr<uint16_t> rpn_calculator::command_top() {
     return result;
 }
 
-shared_ptr<uint16_t> rpn_calculator::command_bw_operation(char const op) {
+shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
     if (value_stack.size() < 2) {
         return nullptr;
     }
 
-    a_val = make_shared<uint16_t>(value_stack.top());
+    shared_ptr<uint16_t> a_val = make_shared<uint16_t>(value_stack.top());
     value_stack.pop();
-    b_val = make_shared<uint16_t>(value_stack.top());
+    shared_ptr<uint16_t> b_val = make_shared<uint16_t>(value_stack.top());
     value_stack.pop();
     switch (op) {
-        case '<':
+        case left_shift:
             value_stack.push(*b_val << *a_val);
             break;
-        case '>':
+        case right_shift:
             value_stack.push(*b_val >> *a_val);
             break;
-        case '|':
+        case bw_or:
             value_stack.push(*b_val | *a_val);
             break;
-        case '&':
+        case bw_and:
             value_stack.push(*b_val & *a_val);
+            break;
+        case bw_add:
+            bitwise_add(a_val, b_val);
             break;
         default:
             break;
@@ -68,10 +71,13 @@ shared_ptr<uint16_t> rpn_calculator::command_bw_operation(char const op) {
     return result;
 }
 
+shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, shared_ptr<uint16_t> b_val) {
+    // save current values in case operation fails
+    uint16_t save_a_val = *a_val;
+    uint16_t save_b_val = *b_val;
+}
+
 shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const value = 0) {
-    // initialize the stack... might not be needed once other functions are in
-    // place.
-    // value_stack.push(0U);
     shared_ptr<uint16_t> result = nullptr;
 
     switch (cmd) {
@@ -92,19 +98,23 @@ shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const 
             return result;
             break;
         case cmd_left_shift:
-            result = command_bw_operation('<');
+            result = command_bw_operation(left_shift);
             return result;
             break;
         case cmd_right_shift:
-            result = command_bw_operation('>');
+            result = command_bw_operation(right_shift);
             return result;
             break;
         case cmd_or:
-            result = command_bw_operation('|');
+            result = command_bw_operation(bw_or);
             return result;
             break;
         case cmd_and:
-            result = command_bw_operation('&');
+            result = command_bw_operation(bw_and);
+            return result;
+            break;
+        case cmd_add:
+            result = command_bw_operation(bw_add);
             return result;
             break;
         default:
