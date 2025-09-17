@@ -1,5 +1,19 @@
 #include "rpn_calc.h"
 
+shared_ptr<uint16_t> rpn_calculator::command_enter(uint16_t value) {
+    value_stack.push(value);
+    shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
+    return result;
+}
+
+shared_ptr<uint16_t> rpn_calculator::command_clear() {
+    while (!value_stack.empty()) {
+        value_stack.pop();
+    }
+
+    return nullptr;
+}
+
 shared_ptr<uint16_t> rpn_calculator::command_pop() {
     if (value_stack.empty()) {
         return nullptr;
@@ -19,19 +33,23 @@ shared_ptr<uint16_t> rpn_calculator::command_top() {
     return result;
 }
 
-shared_ptr<uint16_t> rpn_calculator::command_clear() {
-    while (!value_stack.empty()) {
-        value_stack.pop();
+shared_ptr<uint16_t> rpn_calculator::command_left_shift() {
+    if (value_stack.size() < 2) {
+        return nullptr;
     }
 
-    return nullptr;
+    a_val = command_top();
+    b_val = command_pop();
+    command_pop();
+    value_stack.push(*b_val << *a_val);
+    shared_ptr<uint16_t> result = command_top();
+    return result;
 }
 
-shared_ptr<uint16_t> rpn_calculator::command_enter(uint16_t value) {
-    value_stack.push(value);
-    uint16_t val = value_stack.top();
-    shared_ptr<uint16_t> result = make_shared<uint16_t>(val);
-    return result;
+shared_ptr<uint16_t> rpn_calculator::command_right_shift() {
+    if (value_stack.size() < 2) {
+        return nullptr;
+    }
 }
 
 shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const value = 0) {
@@ -55,6 +73,10 @@ shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const 
             break;
         case cmd_top:
             result = command_top();
+            return result;
+            break;
+        case cmd_left_shift:
+            result = command_left_shift();
             return result;
             break;
         default:
