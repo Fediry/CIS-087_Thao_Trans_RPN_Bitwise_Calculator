@@ -18,10 +18,15 @@ shared_ptr<uint16_t> rpn_calculator::command_pop() {
     if (value_stack.empty()) {
         return nullptr;
     }
-
     value_stack.pop();
-    shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
-    return result;
+
+    // recheck stack size before trying to return pointer
+    if (value_stack.empty()) {
+        return nullptr;
+    } else {
+        shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
+        return result;
+    }
 }
 
 shared_ptr<uint16_t> rpn_calculator::command_top() {
@@ -38,11 +43,12 @@ shared_ptr<uint16_t> rpn_calculator::command_left_shift() {
         return nullptr;
     }
 
-    a_val = command_top();
-    b_val = command_pop();
-    command_pop();
+    a_val = make_shared<uint16_t>(value_stack.top());
+    value_stack.pop();
+    b_val = make_shared<uint16_t>(value_stack.top());
+    value_stack.pop();
     value_stack.push(*b_val << *a_val);
-    shared_ptr<uint16_t> result = command_top();
+    shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
     return result;
 }
 
@@ -50,6 +56,14 @@ shared_ptr<uint16_t> rpn_calculator::command_right_shift() {
     if (value_stack.size() < 2) {
         return nullptr;
     }
+
+    a_val = make_shared<uint16_t>(value_stack.top());
+    value_stack.pop();
+    b_val = make_shared<uint16_t>(value_stack.top());
+    value_stack.pop();
+    value_stack.push(*b_val >> *a_val);
+    shared_ptr<uint16_t> result = command_top();
+    return result;
 }
 
 shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const value = 0) {
@@ -77,6 +91,10 @@ shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const 
             break;
         case cmd_left_shift:
             result = command_left_shift();
+            return result;
+            break;
+        case cmd_right_shift:
+            result = command_right_shift();
             return result;
             break;
         default:
