@@ -1,19 +1,6 @@
-/*
- * *** STUDENTS SHOULD NOT NEED TO CHANGE THE CODE BELOW. IT IS A CUSTOM TEST
- * HARNESS. ***
- */
+#include "tests.h"
 
 using namespace std;
-
-#define INPUT_CSV_FILE "../rpn-input.csv"
-
-// test controls
-#define MIN_VALUE 0
-#define MAX_VALUE 100
-uint8_t const table_width[] = {14, 18, 14, 18, 14, 18};
-
-// test harness structs and params
-#define VALUE_NULLPTR -999
 
 void tests::header() {
     cout << left << setw(table_width[0]) << setfill(' ') << "pass/fail";
@@ -32,8 +19,8 @@ void tests::header() {
     cout << left << setw(table_width[5]) << setfill(' ') << "--------" << endl;
 }
 
-void print_row(bool const test_success, command const cmd, int16_t const value,
-               shared_ptr<uint16_t> top_of_stack) {
+void tests::print_row(bool const test_success, command const cmd,
+                      int16_t const value, shared_ptr<uint16_t> top_of_stack) {
     // print results
     string const pass_fail = test_success ? "PASS" : "FAIL";
     cout << left << setw(table_width[0]) << setfill(' ') << pass_fail;
@@ -57,7 +44,7 @@ void print_row(bool const test_success, command const cmd, int16_t const value,
     }
 }
 
-vector<string> split(string const &s, string const &delimiter) {
+vector<string> tests::split(string const &s, string const &delimiter) {
     vector<string> tokens;
     size_t pos = 0;
     size_t start = 0;
@@ -72,17 +59,17 @@ vector<string> split(string const &s, string const &delimiter) {
     return tokens;
 }
 
-void init_command_map(unordered_map<string, command> &command_map) {
+void tests::init_command_map(unordered_map<string, command> &command_map) {
     for (size_t i = 0; i < command_name.size(); i++) {
         string const cmd = command_name[i];
         command_map[cmd] = static_cast<command>(i);
     }
 }
 
-bool parse_csv_line(string const line,
-                    unordered_map<string, command> command_map,
-                    command &input_cmd, uint16_t &input_value,
-                    int32_t &answer_value) {
+bool tests::parse_csv_line(string const line,
+                           unordered_map<string, command> command_map,
+                           command &input_cmd, uint16_t &input_value,
+                           int32_t &answer_value) {
     try {
         vector<string> tokens = split(line, ",");
 
@@ -109,7 +96,7 @@ bool parse_csv_line(string const line,
     return true;
 }
 
-bool test() {
+bool tests::test() {
     // open input file
     ifstream input_file(INPUT_CSV_FILE);
     if (!input_file.is_open()) {
@@ -154,7 +141,7 @@ bool test() {
             }
 
             // do the command
-            shared_ptr<uint16_t> result = rpn_calc(input_cmd, input_value);
+            shared_ptr<uint16_t> result = calc.rpn_calc(input_cmd, input_value);
 
             // test the results
             bool test_success = false;
