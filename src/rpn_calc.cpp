@@ -1,6 +1,14 @@
 #include "rpn_calc.h"
 
-shared_ptr<uint16_t> rpn_calculator::command_pop() {}
+shared_ptr<uint16_t> rpn_calculator::command_pop() {
+    if (!value_stack.empty()) {
+        value_stack.pop();
+        shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
+        return result;
+    } else {
+        return nullptr;
+    }
+}
 
 shared_ptr<uint16_t> rpn_calculator::command_top() {}
 
