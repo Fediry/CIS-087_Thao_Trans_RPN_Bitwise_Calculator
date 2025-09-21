@@ -14,8 +14,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "spdlog/spdlog.h"
-
 using namespace std;
 
 #define INPUT_CSV_FILE "../rpn-input.csv"

@@ -81,8 +81,6 @@ shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, sha
     uint16_t _b = *b_val;
     bool overflow = false;
 
-    spdlog::debug("a_val:{} b_val:{} _a:{} _b:{}", *a_val, *b_val, _a, _b);
-
     // XOR (^) a and b will add them with no carry, while AND (&) a and b, then left shifting 1 bit will add them with a carry.
     // Assign the results of the XOR back to a and the AND back to b, then repeat the process until b equals zero.
     // a will contain the final result.
@@ -93,7 +91,6 @@ shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, sha
         _b = carry;
     }
 
-    spdlog::debug("_a:{} _b:{}", _a, _b);
     // check for overflow(of unsigned int) by seeing if the result is less then the original operands.
     if (_a > *a_val && _a > *b_val) {
         value_stack.push(_a);

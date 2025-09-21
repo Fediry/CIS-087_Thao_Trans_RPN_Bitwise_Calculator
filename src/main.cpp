@@ -6,8 +6,6 @@
 using namespace std;
 
 int main() {
-    spdlog::set_level(spdlog::level::debug);
-
     tests test;
 
     if (!test.test()) {
