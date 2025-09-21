@@ -43,10 +43,13 @@ shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
         return nullptr;
     }
 
+    shared_ptr<uint16_t> result;
+
     shared_ptr<uint16_t> a_val = make_shared<uint16_t>(value_stack.top());
     value_stack.pop();
     shared_ptr<uint16_t> b_val = make_shared<uint16_t>(value_stack.top());
     value_stack.pop();
+
     switch (op) {
         case left_shift:
             value_stack.push(*b_val << *a_val);
@@ -61,20 +64,45 @@ shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
             value_stack.push(*b_val & *a_val);
             break;
         case bw_add:
-            bitwise_add(a_val, b_val);
+            result = bitwise_add(a_val, b_val);
+            return result;
             break;
         default:
             break;
     }
 
-    shared_ptr<uint16_t> result = command_top();
+    result = make_shared<uint16_t>(value_stack.top());
     return result;
 }
 
 shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, shared_ptr<uint16_t> b_val) {
-    // save current values in case operation fails
-    uint16_t save_a_val = *a_val;
-    uint16_t save_b_val = *b_val;
+    // work with copies in case operation overflows
+    uint16_t _a = *a_val;
+    uint16_t _b = *b_val;
+    bool overflow = false;
+
+    spdlog::debug("a_val:{} b_val:{} _a:{} _b:{}", *a_val, *b_val, _a, _b);
+
+    // XOR (^) a and b will add them with no carry, while AND (&) a and b, then left shifting 1 bit will add them with a carry.
+    // Assign the results of the XOR back to a and the AND back to b, then repeat the process until b equals zero.
+    // a will contain the final result.
+    while (_b != 0) {
+        uint16_t no_carry = _a ^ _b;
+        uint16_t carry = (_a & _b) << 1;
+        _a = no_carry;
+        _b = carry;
+    }
+
+    spdlog::debug("_a:{} _b:{}", _a, _b);
+    // check for overflow(of unsigned int) by seeing if the result is less then the original operands.
+    if (_a > *a_val && _a > *b_val) {
+        value_stack.push(_a);
+        shared_ptr<uint16_t> result = make_shared<uint16_t>(value_stack.top());
+        return result;
+    }
+    value_stack.push(*b_val);
+    value_stack.push(*a_val);
+    return nullptr;
 }
 
 shared_ptr<uint16_t> rpn_calculator::rpn_calc(command const cmd, uint16_t const value = 0) {
