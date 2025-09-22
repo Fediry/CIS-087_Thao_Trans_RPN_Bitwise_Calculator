@@ -39,7 +39,7 @@ shared_ptr<uint16_t> rpn_calculator::command_top() {
 }
 
 shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
-    if (value_stack.size() < 2Z) {
+    if (value_stack.size() < 2) {
         return nullptr;
     }
 
@@ -84,7 +84,7 @@ shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, sha
     // XOR (^) _a and _b will add them with no carry, while AND (&) _a and _b, then left shifting 1 bit will result in the carry.
     // Assign the results of the XOR back to _a and the AND back to _b, then repeat the process until _b(the carry) equals zero.
     // _a will contain the final result.
-    while (_b != 0U) {
+    while (_b != 0) {
         uint16_t no_carry = _a ^ _b;
         uint16_t carry = (_a & _b) << 1;
         _a = no_carry;
