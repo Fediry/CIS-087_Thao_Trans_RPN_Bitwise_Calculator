@@ -39,7 +39,7 @@ shared_ptr<uint16_t> rpn_calculator::command_top() {
 }
 
 shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
-    if (value_stack.size() < 2) {
+    if (value_stack.size() < 2Z) {
         return nullptr;
     }
 
@@ -76,15 +76,15 @@ shared_ptr<uint16_t> rpn_calculator::command_bw_operation(bw_op op) {
 }
 
 shared_ptr<uint16_t> rpn_calculator::bitwise_add(shared_ptr<uint16_t> a_val, shared_ptr<uint16_t> b_val) {
-    // work with copies in case operation overflows
+    // work with copies in case operation overflows and we need to revert the stack
     uint16_t _a = *a_val;
     uint16_t _b = *b_val;
     bool overflow = false;
 
-    // XOR (^) a and b will add them with no carry, while AND (&) a and b, then left shifting 1 bit will add them with a carry.
-    // Assign the results of the XOR back to a and the AND back to b, then repeat the process until b equals zero.
-    // a will contain the final result.
-    while (_b != 0) {
+    // XOR (^) _a and _b will add them with no carry, while AND (&) _a and _b, then left shifting 1 bit will result in the carry.
+    // Assign the results of the XOR back to _a and the AND back to _b, then repeat the process until _b(the carry) equals zero.
+    // _a will contain the final result.
+    while (_b != 0U) {
         uint16_t no_carry = _a ^ _b;
         uint16_t carry = (_a & _b) << 1;
         _a = no_carry;
